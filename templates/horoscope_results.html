@@ -1,14 +1,8 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Horoscope Results</title>
-    </head>
-    <body>
-        <!-- Your HTML code goes here! -->
+{% extends 'base.html' %} {% block title %} Horoscope Results Page{% endblock %}
+{% block content %}
+<h3>
+  Hello {{users_name}}! You are a {{horoscope_sign}}. {{horoscope_sign}} are
+  {{personality}}. Your lucky number is {{lucky_number}}.
+</h3>
 
-        
-
-        
-        
-    </body>
-</html>
+{% endblock %}
