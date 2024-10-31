@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Calculator Results</title>
-    </head>
-    <body>
-        <!-- Your HTML code goes here! -->
+{% extends 'base.html' %} {% block title %} Pizza Delivery Confirmation Page {%
+endblock %} {% block content %}
+<h3>
+  You chose to {{operator}} {{input1}} and {{input2}}. Your result is:
+  {{result}}
+</h3>
 
-
-
-
-
-        
-    </body>
-</html>
+{% endblock %}

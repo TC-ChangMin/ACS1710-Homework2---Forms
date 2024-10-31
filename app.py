@@ -16,57 +16,99 @@ def homepage():
 
 @app.route('/froyo')
 def choose_froyo():
-    """Shows a form to collect the user's Fro-Yo order."""
-    pass
+    return render_template('froyo_form.html')
 
-@app.route('/froyo_results')
+@app.route('/froyo_results', methods=['GET'])
 def show_froyo_results():
-    """Shows the user what they ordered from the previous page."""
-    pass
+
+    context = {
+        "users_froyo_flavor": request.args.get('flavor'),
+        "users_froyo_toppings": request.args.get('toppings'),
+
+    }
+    return render_template('froyo_results.html', **context)
 
 @app.route('/favorites')
 def favorites():
     """Shows the user a form to choose their favorite color, animal, and city."""
-    pass
+    return """
+    <form action="/favorites_results" method="GET">
+        What is your favorite color? <br/>
+        <input type="text" name="color"><br/>
+
+        What is your favorite animal <br/>
+        <input type="text" name="animal"><br/>
+
+        What is your favorite city <br/>
+        <input type="text" name="city"><br/>
+
+        <input type="submit" value="Submit!">
+    </form>
+    """
 
 @app.route('/favorites_results')
 def favorites_results():
     """Shows the user a nice message using their form results."""
-    pass
+    users_favorite_color = request.args.get('color')
+    users_favorite_animal = request.args.get('animal')
+    users_favorite_city = request.args.get('city')
+    return f'Wow, I didn\'t know {users_favorite_color} {users_favorite_animal}s lived in {users_favorite_city}!'
 
 @app.route('/secret_message')
 def secret_message():
     """Shows the user a form to collect a secret message. Sends the result via
     the POST method to keep it a secret!"""
-    pass
-
-@app.route('/message_results', methods=['POST'])
-def message_results():
-    """Shows the user their message, with the letters in sorted order."""
-    pass
-
-@app.route('/calculator')
-def calculator():
-    """Shows the user a form to enter 2 numbers and an operation."""
     return """
-    <form action="/calculator_results" method="GET">
-        Please enter 2 numbers and select an operator.<br/><br/>
-        <input type="number" name="operand1">
-        <select name="operation">
-            <option value="add">+</option>
-            <option value="subtract">-</option>
-            <option value="multiply">*</option>
-            <option value="divide">/</option>
-        </select>
-        <input type="number" name="operand2">
+    <form action="/message_results" method="POST">
+        Enter your secret message below. <br/>
+        <input type="text" name="message"><br/>
+
         <input type="submit" value="Submit!">
     </form>
     """
 
-@app.route('/calculator_results')
+@app.route('/message_results', methods=['POST'])
+def message_results():
+    """Shows the user their message, with the letters in sorted order."""
+    users_secret_messge = request.form.get('message')
+    sorted_message = sort_letters(users_secret_messge)
+    return f'Here is your secret message {sorted_message}'
+
+@app.route('/calculator')
+def calculator():
+    """Shows the user a form to enter 2 numbers and an operation."""
+    return render_template('calculator_form.html')
+
+@app.route('/calculator_results', methods=['GET'])
 def calculator_results():
+
     """Shows the user the result of their calculation."""
-    pass
+    input1 = request.args.get('operand1')
+    input2 = request.args.get('operand2')
+    operator = request.args.get('operation')
+
+    if operator == 'add':
+        result = int(input1) + int(input2)
+
+    elif operator == 'subtract':
+        result = int(input1) - int(input2)
+
+    elif operator == 'multiply':
+        result = int(input1) * int(input2)
+
+    elif operator == 'divide':
+        result = int(input1) / int(input2)
+
+
+    context = {
+        "input1": input1,
+        "input2": input2,
+        "operator": operator,
+        "result": result, 
+
+    }
+
+    return render_template('calculator_results.html', **context)
 
 
 HOROSCOPE_PERSONALITIES = {
@@ -113,4 +155,4 @@ def horoscope_results():
 
 if __name__ == '__main__':
     app.config['ENV'] = 'development'
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
